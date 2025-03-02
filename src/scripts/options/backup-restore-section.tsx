@@ -132,24 +132,24 @@ export const BackupRestoreSection: React.FC = () => {
           <Row>
             <RowItem expanded>
               <LabelWrapper>
-                <Label>{translate("options_initializeSettingsLabel")}</Label>
+                <Label>{translate("options_resetSettingsLabel")}</Label>
               </LabelWrapper>
             </RowItem>
             <RowItem>
               <Button
                 onClick={async () => {
                   const confirmed = window.confirm(
-                    translate("options_initializeSettingsConfirmation"),
+                    translate("options_resetSettingsConfirmation"),
                   );
                   if (!confirmed) {
                     return;
                   }
-                  await sendMessage("initialize-settings");
+                  await sendMessage("reset-settings");
                   // Reload without query parameters
                   window.location.assign(window.location.pathname);
                 }}
               >
-                {translate("options_initializeSettingsButton")}
+                {translate("options_resetSettingsButton")}
               </Button>
             </RowItem>
           </Row>

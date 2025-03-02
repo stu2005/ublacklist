@@ -108,7 +108,7 @@ export async function restore(
   void updateAllSubscriptions();
 }
 
-export async function initialize(): Promise<void> {
+export async function reset(): Promise<void> {
   await resetAllInRawStorage(() => ({}));
 
   if (process.env.BROWSER !== "safari") {

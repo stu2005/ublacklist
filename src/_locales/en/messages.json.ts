@@ -104,6 +104,9 @@ export default exportAsMessages({
   // The label for the textarea that shows rules highlighting the entry.
   popup_highlightingRulesLabel: "Rules highlighting this entry",
 
+  // The label for the switch whether to show blocked results.
+  popup_serpInfoMode_showBlockedResults: "Show blocked search results",
+
   // The title of the general section.
   options_generalTitle: "General",
 
@@ -404,14 +407,14 @@ export default exportAsMessages({
   // The error message that is shown when the backup file is invalid.
   options_restoreSettingsInvalidFile: "The file format is invalid.",
 
-  // Initialize settings.
-  options_initializeSettingsLabel: "Reset settings",
+  // Reset settings.
+  options_resetSettingsLabel: "Reset settings",
 
-  // The text of the button to initialize settings.
-  options_initializeSettingsButton: "Reset",
+  // The text of the button to reset settings.
+  options_resetSettingsButton: "Reset",
 
-  // The confirmation message to initialize settings.
-  options_initializeSettingsConfirmation:
+  // The confirmation message to reset settings.
+  options_resetSettingsConfirmation:
     "Do you really want to reset your settings?",
 
   // The title of the about section.
@@ -431,6 +434,31 @@ export default exportAsMessages({
 
   // The text of the link to the third-party notices.
   options_aboutThirdPartyNotices: "Third-Party Notices",
+
+  // The title of the experimental section.
+  options_experimentalSectionTitle: "Experimental features",
+
+  // SERPINFO mode.
+  options_serpInfoMode: "SERPINFO mode",
+
+  // The text of the button to open the settings of SERPINFO mode.
+  options_serpInfoModeOpenSettings: "Settings",
+
+  // The title of the section for SERPINFO mode.
+  options_serpInfoMode_sectionTitle: "SERPINFO mode",
+
+  // The label of the switch to enable SERPINFO mode.
+  options_serpInfoMode_enable: "Enable SERPINFO mode",
+
+  // The label of the switch to enable SERPINFO mode for all search engines.
+  options_serpInfoMode_enableForAll:
+    "Enable SERPINFO mode for all search engines",
+
+  // User SERPINFO.
+  options_serpInfoMode_userSerpInfo: "My SERPINFO",
+
+  // The text of the button to save user SERPINFO.
+  options_serpInfoMode_saveUserSerpInfoButton: "Save",
 
   // The label of the radio button to sync with Google Drive.
   clouds_googleDriveSync: "Sync with Google Drive",

@@ -8,6 +8,7 @@ import * as Sync from "./background/sync.ts";
 import * as Watch from "./background/watch.ts";
 import { browser } from "./browser.ts";
 import { addMessageListeners } from "./messages.ts";
+import { main as serpInfoMain } from "./serpinfo/background.ts";
 
 function main() {
   addMessageListeners({
@@ -19,8 +20,6 @@ function main() {
     "remove-subscription": LocalStorage.removeSubscription,
     "enable-subscription": LocalStorage.enableSubscription,
 
-    "register-content-scripts": SearchEngines.registerContentScripts,
-
     sync: Sync.sync,
 
     "update-subscription": Subscriptions.update,
@@ -30,7 +29,7 @@ function main() {
 
     "backup-settings": BackupRestore.backup,
     "restore-settings": BackupRestore.restore,
-    "initialize-settings": BackupRestore.initialize,
+    "reset-settings": BackupRestore.reset,
   });
 
   browser.runtime.onInstalled.addListener(({ reason }) => {
@@ -94,6 +93,8 @@ function main() {
       })();
     });
   }
+
+  serpInfoMain();
 }
 
 main();

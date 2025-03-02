@@ -1,8 +1,10 @@
 import type dayjs from "dayjs";
 import type { MessageName0 } from "../common/locales.ts";
 import type { SearchEngine as _SearchEngine } from "../common/search-engines.ts";
-import type { QueryResult, RulesetMatches } from "./interactive-ruleset.ts";
+import type { QueryResult } from "./interactive-ruleset.ts";
+import type { RulesetMatches } from "./interactive-ruleset.ts";
 import type { LinkProps } from "./ruleset/ruleset.ts";
+import type { CompiledSerpInfo } from "./serpinfo/types.ts";
 
 export type {
   MessageName,
@@ -110,6 +112,11 @@ export type LocalStorageItems = {
   // subscriptions
   subscriptions: Subscriptions;
   updateInterval: number;
+
+  // experimental
+  enableSerpInfo: boolean;
+  userSerpInfo: string;
+  compiledSerpInfo: CompiledSerpInfo;
 };
 
 export type LocalStorageItemsFor<
@@ -120,7 +127,12 @@ export type LocalStorageItemsFor<
 
 export type LocalStorageItemsSavable = Omit<
   LocalStorageItems,
-  "ruleset" | "compiledRules" | "syncCloudId" | "syncResult" | "subscriptions"
+  | "ruleset"
+  | "compiledRules"
+  | "syncCloudId"
+  | "syncResult"
+  | "subscriptions"
+  | "plainSerpInfo"
 >;
 
 export type SaveSource = "content-script" | "popup" | "options" | "background";

@@ -56,7 +56,10 @@ export default {
           })),
         )
       : SEARCH_ENGINES.google.contentScripts.map(({ matches, runAt }) => ({
-          js: ["scripts/content-script.js"],
+          js: [
+            "scripts/content-script.js",
+            "scripts/serpinfo/content-script.js",
+          ],
           matches,
           run_at: runAt,
         })),
@@ -101,8 +104,7 @@ export default {
   permissions: [
     "activeTab",
     "alarms",
-    ...(process.env.BROWSER !== "safari" ? ["identity"] : []),
-    ...(process.env.BROWSER === "chrome" ? ["scripting"] : []),
+    ...(process.env.BROWSER !== "safari" ? ["identity", "scripting"] : []),
     "storage",
     "unlimitedStorage",
   ],

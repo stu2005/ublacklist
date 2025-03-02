@@ -438,4 +438,8 @@ function main() {
   }
 }
 
-main();
+loadFromLocalStorage(["enableSerpInfo"]).then(({ enableSerpInfo }) => {
+  if (!enableSerpInfo) {
+    main();
+  }
+});

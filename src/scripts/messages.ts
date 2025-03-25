@@ -49,6 +49,14 @@ type MessageSignatures = {
   "notify-blocked-result-count": (count: number) => void;
   "get-hide-blocked-results": () => boolean;
   "set-hide-blocked-results": (show: boolean) => void;
+
+  "enable-serpinfo": (enabled: boolean) => void;
+  "set-user-serpinfo": (userInput: string) => void;
+  "add-remote-serpinfo": (url: string) => void;
+  "remove-remote-serpinfo": (url: string) => void;
+  "enable-remote-serpinfo": (url: string, enabled: boolean) => void;
+  "update-remote-serpinfo": (url: string) => void;
+  "update-all-remote-serpinfo": () => void;
 };
 
 export type MessageTypes = keyof MessageSignatures;

@@ -1,20 +1,23 @@
 import isMobile from "is-mobile";
 import { MatchPatternMap } from "../../common/match-pattern.ts";
 import { filter } from "./filter.ts";
+import type { SerpIndex, SerpInfoSettings } from "./settings.ts";
 import { storageStore } from "./storage-store.ts";
 import { setupPopupListeners, style } from "./style.ts";
-import type { CompiledSerpInfo } from "./types.ts";
 import type { SerpDescription } from "./types.ts";
 
 function getSerpDescriptions(
-  compiledSerpInfo: CompiledSerpInfo,
+  settings: Readonly<SerpInfoSettings>,
   url: string,
   mobile: boolean,
 ): SerpDescription[] {
-  return new MatchPatternMap<number>(compiledSerpInfo.urlToSerpIndices)
+  return new MatchPatternMap<SerpIndex>(settings.serpIndexMap)
     .get(url)
     .flatMap((index) => {
-      const serp = compiledSerpInfo.serps[index];
+      const serp =
+        index[0] === "user"
+          ? settings.user.parsed?.pages[index[1]]
+          : settings.remote[index[1]].parsed?.pages[index[2]];
       if (!serp) {
         return [];
       }
@@ -62,13 +65,13 @@ function awaitLoad(delay: number, callback: () => void) {
 }
 
 storageStore.attachPromise.then(() => {
-  const state = storageStore.getState();
-  if (!storageStore.getState().enableSerpInfo) {
+  const state = storageStore.get();
+  if (!state.serpInfoSettings.enabled) {
     return;
   }
 
   const serps = getSerpDescriptions(
-    state.compiledSerpInfo,
+    state.serpInfoSettings,
     window.location.href,
     isMobile({ tablet: true }),
   );

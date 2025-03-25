@@ -177,8 +177,10 @@ async function createBuildScripts(
     format: "iife",
     jsx: "automatic",
     jsxDev: debug,
-    // https://github.com/evanw/esbuild/issues/3418
-    loader: { ".svg": "text" },
+    loader: {
+      ".svg": "text", // https://github.com/evanw/esbuild/issues/3418
+      ".yml": "text", // builtin serpinfo
+    },
     logLevel: "silent",
     outbase: srcDir,
     outdir: destDir,

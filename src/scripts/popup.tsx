@@ -156,8 +156,10 @@ const Popup: React.FC = () => {
       if (tabId == null || url == null) {
         return;
       }
-      const { enableSerpInfo } = await loadFromLocalStorage(["enableSerpInfo"]);
-      if (enableSerpInfo) {
+      const { serpInfoSettings } = await loadFromLocalStorage([
+        "serpInfoSettings",
+      ]);
+      if (serpInfoSettings.enabled) {
         try {
           const hideBlockedResults = await sendMessageToTab(
             tabId,

@@ -448,6 +448,13 @@ const SyncCategories: React.FC<{ disabled: boolean }> = ({ disabled }) => (
               label={translate("options_syncSubscriptions")}
             />
           </ListItem>
+          <ListItem>
+            <SetBooleanItem
+              disabled={disabled}
+              itemKey="syncSerpInfo"
+              label={translate("options_syncSerpInfo")}
+            />
+          </ListItem>
         </List>
       </RowItem>
     </Row>

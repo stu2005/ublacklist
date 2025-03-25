@@ -96,6 +96,7 @@ export type MessageName =
   | "options_syncGeneral"
   | "options_syncAppearance"
   | "options_syncSubscriptions"
+  | "options_syncSerpInfo"
   | "options_syncInterval"
   | "options_subscriptionTitle"
   | "options_subscriptionFeature"

@@ -7,6 +7,9 @@
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "noEmit": true,
+    "paths": {
+      "@serpinfo/*": ["./serpinfo/serpinfo/*"]
+    },
     "skipLibCheck": true,
     "strict": true,
     "target": "ESNext",

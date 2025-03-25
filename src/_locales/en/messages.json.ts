@@ -314,6 +314,9 @@ export default exportAsMessages({
   // The label of the switch to sync the subscriptions.
   options_syncSubscriptions: "Subscriptions",
 
+  // The label of the switch to sync SERPINFO.
+  options_syncSerpInfo: "SERPINFO",
+
   // The label of the select to select a sync interval.
   options_syncInterval: "Sync interval",
 

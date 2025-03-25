@@ -4,7 +4,10 @@ import type { SearchEngine as _SearchEngine } from "../common/search-engines.ts"
 import type { QueryResult } from "./interactive-ruleset.ts";
 import type { RulesetMatches } from "./interactive-ruleset.ts";
 import type { LinkProps } from "./ruleset/ruleset.ts";
-import type { CompiledSerpInfo } from "./serpinfo/types.ts";
+import type {
+  SerpInfoSettings,
+  Serializable as SerpInfoSettingsSerializable,
+} from "./serpinfo/settings.ts";
 
 export type {
   MessageName,
@@ -106,6 +109,7 @@ export type LocalStorageItems = {
   syncGeneral: boolean;
   syncAppearance: boolean;
   syncSubscriptions: boolean;
+  syncSerpInfo: boolean;
   syncResult: Result | false | null;
   syncInterval: number;
 
@@ -113,10 +117,8 @@ export type LocalStorageItems = {
   subscriptions: Subscriptions;
   updateInterval: number;
 
-  // experimental
-  enableSerpInfo: boolean;
-  userSerpInfo: string;
-  compiledSerpInfo: CompiledSerpInfo;
+  // serpinfo
+  serpInfoSettings: SerpInfoSettings;
 };
 
 export type LocalStorageItemsFor<
@@ -132,7 +134,7 @@ export type LocalStorageItemsSavable = Omit<
   | "syncCloudId"
   | "syncResult"
   | "subscriptions"
-  | "plainSerpInfo"
+  | "serpInfoSettings"
 >;
 
 export type SaveSource = "content-script" | "popup" | "options" | "background";
@@ -154,10 +156,12 @@ export type LocalStorageItemsBackupRestore = Pick<
   | "syncGeneral"
   | "syncAppearance"
   | "syncSubscriptions"
+  | "syncSerpInfo"
   | "syncInterval"
   | "updateInterval"
 > & {
   subscriptions: readonly { name: string; url: string; enabled: boolean }[];
+  serpInfoSettings: SerpInfoSettingsSerializable;
 };
 // #endregion LocalStorage
 

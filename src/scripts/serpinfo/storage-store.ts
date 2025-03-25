@@ -2,44 +2,33 @@ import { type Mutate, type StoreApi, createStore, useStore } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
 import { type Browser, browser } from "../browser.ts";
 import { defaultLocalStorageItems } from "../local-storage.ts";
+import type { LocalStorageItems, LocalStorageItemsSavable } from "../types.ts";
 
 type AreaName = "sync" | "local" | "managed" | "session";
 
-type StorageStoreApi<T extends Record<string, unknown>> = Mutate<
-  StoreApi<T>,
-  [["zustand/subscribeWithSelector", never]]
-> & {
+type StorageStoreApi<
+  T extends Record<string, unknown>,
+  U extends Partial<T>,
+> = Mutate<StoreApi<T>, [["zustand/subscribeWithSelector", never]]> & {
   attachPromise: Promise<void>;
   detach: () => void;
   use: { [K in keyof T]: () => T[K] };
+  get(): T;
+  set(partial: Partial<U> | ((state: T) => Partial<U>)): void;
 };
 
-function createStorageStore<T extends Record<string, unknown>>(
-  areaName: AreaName,
-  defaultState: T,
-): StorageStoreApi<T> {
+function createStorageStore<
+  T extends Record<string, unknown>,
+  U extends Partial<T> = T,
+>(areaName: AreaName, defaultState: T): StorageStoreApi<T, U> {
   const store = createStore(
     subscribeWithSelector(() => defaultState),
-  ) as StorageStoreApi<T>;
+  ) as StorageStoreApi<T, U>;
 
   const area = browser.storage[areaName];
-  const setState = store.setState;
-  let pendingState: Partial<T> | null = {};
-
-  store.setState = (partial) => {
-    const state =
-      typeof partial === "function" ? partial(store.getState()) : partial;
-    if (pendingState) {
-      pendingState = { ...pendingState, ...state };
-    } else {
-      area.set(state);
-    }
-  };
 
   store.attachPromise = area.get(defaultState).then((state) => {
-    // biome-ignore lint/style/noNonNullAssertion: `pendingState` is never `null` here
-    setState({ ...(state as T), ...pendingState! });
-    pendingState = null;
+    store.setState(state as T);
   });
 
   const listener = (
@@ -53,11 +42,7 @@ function createStorageStore<T extends Record<string, unknown>>(
       }
       state[key as keyof T] = newValue as T[keyof T];
     }
-    if (pendingState) {
-      pendingState = { ...pendingState, ...state };
-    } else {
-      setState(state);
-    }
+    store.setState(state);
   };
   area.onChanged.addListener(listener);
   store.detach = () => {
@@ -70,10 +55,18 @@ function createStorageStore<T extends Record<string, unknown>>(
       useStore(store, (state) => state[key] as T[keyof T]);
   }
 
+  store.get = store.getState;
+
+  store.set = (partial) => {
+    const state =
+      typeof partial === "function" ? partial(store.getState()) : partial;
+    void area.set(state);
+  };
+
   return store;
 }
 
-export const storageStore = createStorageStore(
-  "local",
-  defaultLocalStorageItems,
-);
+export const storageStore = createStorageStore<
+  LocalStorageItems,
+  LocalStorageItemsSavable
+>("local", defaultLocalStorageItems);

@@ -17,22 +17,21 @@ import { Switch } from "../components/switch.tsx";
 import { Text } from "../components/text.tsx";
 import { AutoThemeProvider } from "../components/theme.tsx";
 import { translate } from "../locales.ts";
-import { compile } from "./compile.ts";
+import { sendMessage } from "../messages.ts";
 import { Editor } from "./editor.tsx";
+import { parse } from "./parse.ts";
 import { storageStore } from "./storage-store.ts";
 
 function SerpInfoSection(): React.ReactNode {
   const UNIVERSAL_PERMISSION = { origins: ["*://*/*"] };
 
   use(storageStore.attachPromise);
-  const enableSerpInfo = storageStore.use.enableSerpInfo();
+  const settings = storageStore.use.serpInfoSettings();
   const [enableSerpInfoForAll, setEnableSerpInfoForAll] = useState<
     boolean | null
   >(null);
-  const [userSerpInfo, setUserSerpInfo] = useState(
-    storageStore.getState().userSerpInfo,
-  );
-  const [userSerpInfoDirty, setUserSerpInfoDirty] = useState(false);
+  const [userInput, setUserInput] = useState(settings.user.input);
+  const [userInputDirty, setUserInputDirty] = useState(false);
   useEffect(() => {
     browser.permissions.contains(UNIVERSAL_PERMISSION).then((granted) => {
       setEnableSerpInfoForAll(granted);
@@ -64,11 +63,11 @@ function SerpInfoSection(): React.ReactNode {
             </RowItem>
             <RowItem>
               <Switch
-                checked={enableSerpInfo}
+                checked={settings.enabled}
                 id="enableSerpInfo"
                 onChange={(e) => {
                   const value = e.currentTarget.checked;
-                  storageStore.setState({ enableSerpInfo: value });
+                  void sendMessage("enable-serpinfo", value);
                 }}
               />
             </RowItem>
@@ -86,7 +85,6 @@ function SerpInfoSection(): React.ReactNode {
             <RowItem>
               <Switch
                 checked={enableSerpInfoForAll}
-                disabled={!enableSerpInfo}
                 id="enableSerpInfoForAll"
                 onChange={(e) => {
                   const value = e.currentTarget.checked;
@@ -116,10 +114,10 @@ function SerpInfoSection(): React.ReactNode {
               </LabelWrapper>
               <Editor
                 height="max(300px, 100vh - 270px)"
-                value={userSerpInfo}
+                value={userInput}
                 onChange={(value) => {
-                  setUserSerpInfo(value);
-                  setUserSerpInfoDirty(true);
+                  setUserInput(value);
+                  setUserInputDirty(true);
                 }}
               />
             </RowItem>
@@ -132,16 +130,15 @@ function SerpInfoSection(): React.ReactNode {
             )}
             <RowItem>
               <Button
-                disabled={!userSerpInfoDirty}
+                disabled={!userInputDirty}
                 primary
                 onClick={() => {
-                  const result = compile(userSerpInfo, [], true);
-                  storageStore.setState({
-                    userSerpInfo,
-                    compiledSerpInfo: result.data,
-                  });
-                  setUserSerpInfoDirty(false);
-                  setUserSerpInfoError(result.error);
+                  void sendMessage("set-user-serpinfo", userInput);
+                  setUserInputDirty(false);
+                  const parseResult = parse(userInput, true);
+                  setUserSerpInfoError(
+                    parseResult.success ? null : parseResult.error,
+                  );
                 }}
               >
                 {translate("options_serpInfoMode_saveUserSerpInfoButton")}

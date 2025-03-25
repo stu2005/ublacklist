@@ -118,6 +118,17 @@ export default {
             matches: ["https://iorate.github.io/*"],
             resources: ["pages/options.html"],
           },
+          ...(process.env.DEBUG === "true"
+            ? [
+                {
+                  matches: ["*://*/*"],
+                  resources: [
+                    "scripts/content-script.js.map",
+                    "scripts/serpinfo/content-script.js.map",
+                  ],
+                },
+              ]
+            : []),
         ],
       }
     : process.env.BROWSER === "safari"

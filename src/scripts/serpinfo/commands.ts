@@ -322,13 +322,15 @@ const cssLengthPercentageSchema = z.literal(0).or(z.string());
 export const buttonCommandSchema = discriminatedTupleUnion([
   tupleWithOptional([
     z.literal("inset"),
-    z.object({
-      top: cssLengthPercentageSchema.optional(),
-      right: cssLengthPercentageSchema.optional(),
-      bottom: cssLengthPercentageSchema.optional(),
-      left: cssLengthPercentageSchema.optional(),
-      zIndex: z.number().optional(),
-    }),
+    z
+      .object({
+        top: cssLengthPercentageSchema.optional(),
+        right: cssLengthPercentageSchema.optional(),
+        bottom: cssLengthPercentageSchema.optional(),
+        left: cssLengthPercentageSchema.optional(),
+        zIndex: z.number().optional(),
+      })
+      .optional(),
     elementCommandSchema.optional(),
   ]),
 ]);
@@ -367,7 +369,7 @@ const buttonCommandImpl: ButtonCommandImpl = {
       padding: "12px",
       position: "absolute",
       zIndex: 1,
-      ...options,
+      ...(options || { top: 0, right: 0 }),
     });
     button.setAttribute(C.BUTTON_ATTRIBUTE, "1");
     button.addEventListener("click", (event) => {

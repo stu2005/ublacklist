@@ -64,7 +64,7 @@ function setHightlightColors(colors: readonly string[]) {
 }
 
 export function style() {
-  const state = storageStore.getState();
+  const state = storageStore.get();
   hideBlockedResults(hideBlockedResultsStore.getState());
   hideBlockButtons(state.hideBlockLinks);
   setBlockColor(state.blockColor);

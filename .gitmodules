@@ -1,0 +1,3 @@
+[submodule "serpinfo"]
+	path = serpinfo
+	url = https://github.com/iorate/serpinfo.git

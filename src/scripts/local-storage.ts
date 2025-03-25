@@ -1,25 +1,12 @@
 import { browser } from "./browser.ts";
 import { sendMessage } from "./messages.ts";
-import { defaultCompiledSerpInfo } from "./serpinfo/types.ts";
+import { getDefault } from "./serpinfo/settings.ts";
 import type {
   LocalStorageItems,
   LocalStorageItemsFor,
   LocalStorageItemsSavable,
   SaveSource,
 } from "./types.ts";
-
-const defaultUserSerpInfo = `name: My SERPINFO
-
-serps:
-  - name: Example
-    matches:
-      - "*://*.example.com/*"
-    results:
-      - root: body > div
-        url: a
-        props:
-          title: h1
-`;
 
 export const defaultLocalStorageItems: Readonly<LocalStorageItems> = {
   ruleset: false,
@@ -42,15 +29,14 @@ export const defaultLocalStorageItems: Readonly<LocalStorageItems> = {
   syncGeneral: false,
   syncAppearance: false,
   syncSubscriptions: false,
+  syncSerpInfo: false,
   syncResult: false,
   syncInterval: 15,
 
   subscriptions: {},
   updateInterval: 120,
 
-  enableSerpInfo: false,
-  userSerpInfo: defaultUserSerpInfo,
-  compiledSerpInfo: defaultCompiledSerpInfo,
+  serpInfoSettings: getDefault(),
 };
 
 export function loadFromLocalStorage<Keys extends (keyof LocalStorageItems)[]>(

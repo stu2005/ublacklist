@@ -13,6 +13,7 @@ import {
 } from "../components/section.tsx";
 import { translate } from "../locales.ts";
 import { sendMessage } from "../messages.ts";
+import * as SerpInfoSettings from "../serpinfo/settings.ts";
 import type { LocalStorageItemsBackupRestore } from "../types.ts";
 import { downloadTextFile, parseJSON, uploadTextFile } from "../utilities.ts";
 
@@ -98,6 +99,7 @@ export const BackupRestoreSection: React.FC = () => {
                       syncGeneral: z.boolean().optional(),
                       syncAppearance: z.boolean().optional(),
                       syncSubscriptions: z.boolean().optional(),
+                      syncSerpInfo: z.boolean().optional(),
                       syncInterval: z.number().optional(),
                       subscriptions: z
                         .object({
@@ -108,6 +110,8 @@ export const BackupRestoreSection: React.FC = () => {
                         .array()
                         .optional(),
                       updateInterval: z.number().optional(),
+                      serpInfoSettings:
+                        SerpInfoSettings.serializableSchema.optional(),
                       version: z.string().optional(),
                     })
                     .safeParse(parseJSON(text));

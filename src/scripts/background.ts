@@ -8,7 +8,7 @@ import * as Sync from "./background/sync.ts";
 import * as Watch from "./background/watch.ts";
 import { browser } from "./browser.ts";
 import { addMessageListeners } from "./messages.ts";
-import { main as serpInfoMain } from "./serpinfo/background.ts";
+import * as SerpInfo from "./serpinfo/background.ts";
 
 function main() {
   addMessageListeners({
@@ -32,27 +32,26 @@ function main() {
     "reset-settings": BackupRestore.reset,
   });
 
+  const onStartup = () => {
+    void LocalStorage.compileRules();
+    void Sync.sync();
+    void Subscriptions.updateAll();
+    void SearchEngines.registerContentScripts();
+    void SerpInfo.onStartup();
+    if (process.env.WATCH === "true" && process.env.BROWSER === "chrome") {
+      void Watch.watch();
+    }
+  };
+
   browser.runtime.onInstalled.addListener(({ reason }) => {
     if (reason !== "install" && reason !== "update") {
       return;
     }
-    void LocalStorage.compileRules();
-    void Sync.sync();
-    void Subscriptions.updateAll();
-    void SearchEngines.registerContentScripts();
-    if (process.env.WATCH === "true" && process.env.BROWSER === "chrome") {
-      void Watch.watch();
-    }
+    onStartup();
   });
 
   browser.runtime.onStartup.addListener(() => {
-    void LocalStorage.compileRules();
-    void Sync.sync();
-    void Subscriptions.updateAll();
-    void SearchEngines.registerContentScripts();
-    if (process.env.WATCH === "true" && process.env.BROWSER === "chrome") {
-      void Watch.watch();
-    }
+    onStartup();
   });
 
   browser.alarms.onAlarm.addListener((alarm) => {
@@ -94,7 +93,7 @@ function main() {
     });
   }
 
-  serpInfoMain();
+  SerpInfo.main();
 }
 
 main();

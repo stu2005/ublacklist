@@ -1,3 +1,4 @@
+import { colord } from "colord";
 import { type Root, createRoot } from "react-dom/client";
 import { BlockDialog } from "../block-dialog.tsx";
 import type { InteractiveRuleset } from "../interactive-ruleset.ts";
@@ -22,29 +23,21 @@ function getDialogRoot(): DialogRoot {
   return dialogRoot;
 }
 
-function getBackgroundColor(
-  element: Element,
-): [number, number, number, number] {
-  const m = /^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d*\.?\d+))?/.exec(
-    window.getComputedStyle(element).backgroundColor,
-  );
-  if (!m) {
-    return [0, 0, 0, 0]; // transparent fallback
-  }
-  return [Number(m[1]), Number(m[2]), Number(m[3]), m[4] ? Number(m[4]) : 1];
-}
-
 function getDialogTheme(): DialogTheme {
-  let [r, g, b, a] = getBackgroundColor(document.body);
-  if (a === 0) {
-    [r, g, b, a] = getBackgroundColor(document.documentElement);
-    if (a === 0) {
-      return "light";
+  try {
+    const bodyColor = colord(
+      window.getComputedStyle(document.body).backgroundColor,
+    );
+    if (bodyColor.alpha() !== 0) {
+      return bodyColor.isDark() ? "dark" : "light";
     }
+    const htmlColor = colord(
+      window.getComputedStyle(document.documentElement).backgroundColor,
+    );
+    return htmlColor.alpha() !== 0 && htmlColor.isDark() ? "dark" : "light";
+  } catch {
+    return "light";
   }
-  // https://www.w3.org/WAI/ER/WD-AERT/#color-contrast
-  const brightness = (r * 299 + g * 587 + b * 114) / 1000;
-  return brightness < 125 ? "dark" : "light";
 }
 
 export function closeDialog() {
@@ -55,7 +48,7 @@ export function closeDialog() {
 }
 
 export function openDialog(result: Result, ruleset: InteractiveRuleset) {
-  const state = storageStore.getState();
+  const state = storageStore.get();
   const props = { ...result.props, url: result.url };
   const onBlocked = () =>
     void saveToLocalStorage(

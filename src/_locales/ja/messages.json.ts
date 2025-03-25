@@ -113,6 +113,7 @@ export default exportAsMessages({
   options_syncGeneral: "一般設定",
   options_syncAppearance: "外観",
   options_syncSubscriptions: "購読",
+  options_syncSerpInfo: "SERPINFO",
   options_syncInterval: "同期の間隔",
   options_subscriptionTitle: "購読",
   options_subscriptionFeature: "ブラックリストを購読する",
